@@ -46,6 +46,7 @@ def on_ui_tabs():
             <tr><td>Use Dropout</td><td>{hn.use_dropout}</td></tr>\
             <tr><td>Last Layer Dropout</td><td>{hn.last_layer_dropout}</td></tr>\
             <tr><td>Activate Output</td><td>{hn.activate_output}</td></tr>\
+            <tr><td>Checkpoint Name</td><td>{hn.sd_checkpoint_name}</td></tr>\
             </table>'
         hna.change(fn=print_hn_info, inputs=hna, outputs=hna_html)
         hnb.change(fn=print_hn_info, inputs=hnb, outputs=hnb_html)
@@ -68,6 +69,9 @@ def on_ui_tabs():
 
             if hna.add_layer_norm != hnb.add_layer_norm:
                 return 'HNs with different layer normalization setting cannot be merged.'
+
+            if hna.use_dropout != hnb.use_dropout:
+                return 'HNs with different dropout setting cannot be merged.'
 
             def merge_module(m1, m2, weight):
                 copy_type = [torch.nn.Linear, torch.nn.LayerNorm]
