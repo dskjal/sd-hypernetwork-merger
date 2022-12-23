@@ -40,7 +40,7 @@ def on_ui_tabs():
             hn = load_hn(hn_name)
             return f'<table>\
             <tr><td>Modules</td><td>{list(hn.layers.keys())}</td></tr>\
-            <tr><td>Layer Structure</td><td>{hn.layer_structure}</td></tr>\
+            <tr><td>Layer Structure</td><td>{", ".join([str(i) for i in hn.layer_structure])}</td></tr>\
             <tr><td>Activation Func</td><td>{hn.activation_func}</td></tr>\
             <tr><td>Use Layer Normalization</td><td>{hn.add_layer_norm}</td></tr>\
             <tr><td>Use Dropout</td><td>{hn.use_dropout}</td></tr>\
