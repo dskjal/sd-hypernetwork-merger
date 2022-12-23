@@ -9,3 +9,5 @@ This extension merges hypernetwork. The Hypernetwork to be combined must match t
 The following settings do not have to match to be combined, but operation is not guaranteed. The Activation Function and Dropout settings are used for Hypernetwork A.  
 1. Activation Function
 2. Dropout
+
+![](https://github.com/dskjal/sd-hypernetwork-merger/blob/main/misc/screenshot.png)
