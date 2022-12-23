@@ -2,17 +2,25 @@ import os
 import gradio as gr
 import torch
 from modules import scripts, script_callbacks, sd_models, shared
+from modules.ui import create_refresh_button
 from modules.hypernetworks import hypernetwork
+
+def get_hypernetwork_names():
+    return [x for x in hypernetwork.list_hypernetworks(shared.cmd_opts.hypernetwork_dir).keys()]
 
 def on_ui_tabs():
     with gr.Blocks() as main_block:
         # UI
         with gr.Row():
-            with gr.Column():
-                hna = gr.Dropdown(label="Hypernetwork A", choices=[x for x in shared.hypernetworks.keys()])
+            with gr.Column(varint="panel"):
+                with gr.Row():
+                    hna = gr.Dropdown(label="Hypernetwork A", choices=get_hypernetwork_names())
+                    create_refresh_button(hna, get_hypernetwork_names, lambda: {"choices": get_hypernetwork_names()}, "refresh_hn_models")
                 hna_html = gr.HTML()
             with gr.Column():
-                hnb = gr.Dropdown(label="Hypernetwork B", choices=[x for x in shared.hypernetworks.keys()])
+                with gr.Row():
+                    hnb = gr.Dropdown(label="Hypernetwork B", choices=[x for x in shared.hypernetworks.keys()])
+                    create_refresh_button(hnb, get_hypernetwork_names, lambda: {"choices": get_hypernetwork_names()}, "refresh_hn_models")
                 hnb_html = gr.HTML()
             with gr.Column():
                 blend_weight = gr.Slider(label="blend weight (A*(1-w) + B*w)", minimum=0, maximum=1, step=0.01, value=0.5, interactive=True)
