@@ -4,7 +4,7 @@ import torch
 from modules import scripts, script_callbacks, sd_models, shared
 from modules.ui import create_refresh_button
 from modules.hypernetworks import hypernetwork
-from scripts.utils import get_hypernetwork_names, load_hn, layer_structure_to_html, print_hn_info, merge_hn
+from scripts.utils import get_hypernetwork_names, load_hn, get_module_html_from_cache, print_hn_info, merge_hn
 
 def on_ui_tabs():
     modules = ["768", "1024", "320", "640", "1280"]
@@ -33,9 +33,9 @@ def on_ui_tabs():
                 result_html = gr.HTML()
 
         hna.change(fn=print_hn_info, inputs=[hna, hna_ls_module], outputs=[hna_html, hna_ls_html])
-        hna_ls_module.change(fn=layer_structure_to_html, inputs=[hna, hna_ls_module], outputs=hna_ls_html)
+        hna_ls_module.change(fn=get_module_html_from_cache, inputs=[hna, hna_ls_module], outputs=hna_ls_html)
         hnb.change(fn=print_hn_info, inputs=[hnb, hnb_ls_module], outputs=[hnb_html, hnb_ls_html])
-        hnb_ls_module.change(fn=layer_structure_to_html, inputs=[hnb, hnb_ls_module], outputs=hnb_ls_html)
+        hnb_ls_module.change(fn=get_module_html_from_cache, inputs=[hnb, hnb_ls_module], outputs=hnb_ls_html)
 
         merge_btn.click(fn=merge_hn, inputs=[hna, hnb, checked_modules, blend_weight, output_name], outputs=result_html)
 

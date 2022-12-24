@@ -4,6 +4,35 @@ import re
 from modules import scripts, script_callbacks, sd_models, shared
 from modules.hypernetworks import hypernetwork
 
+class Hypernetwork_Cache:
+    def __init__(self, hn):
+        self.module_names = list(hn.layers.keys())
+        self.layer_structure = hn.layer_structure
+        self.activation_func = hn.activation_func
+        self.add_layer_norm = hn.add_layer_norm
+        self.use_dropout = hn.use_dropout
+        self.last_layer_dropout = hn.last_layer_dropout
+        self.activate_output = hn.activate_output
+        self.sd_checkpoint_name = hn.sd_checkpoint_name
+        self.step = hn.step+1
+        self.weight_init = hn.weight_init
+
+        def sequential_to_html(seq):
+            layers = re.findall(r': ([^\(]+\([^\)]*\))', str(seq))
+            layers = map(lambda x: x.split("(", 1), layers)
+            html = "<table>"
+            for layer, args in layers:
+                html += f'<tr><td>{layer}</td><td>({args}</td><tr/>'
+            return html+"</table>"
+        self.module_htmls = { n : sequential_to_html(hn.layers[n][0].linear) for n in self.module_names}
+
+    def get_module_html(self, module):
+        m = self.module_htmls.get(module)
+        return m if m else ""
+
+
+hypernetwork_cache = {}
+
 def get_hypernetwork_names():
     return [x for x in hypernetwork.list_hypernetworks(shared.cmd_opts.hypernetwork_dir).keys()]
 
@@ -13,21 +42,15 @@ def load_hn(hn_name):
     hn.load(path)
     return hn
 
-def layer_structure_to_html(hn_name, module):
-    hn = load_hn(hn_name)
-    m = hn.layers.get(int(module))
-    if not m:
+def get_module_html_from_cache(hn_name, module_to_display):
+    hnc = hypernetwork_cache.get(hn_name)
+    if not hnc:
         return ""
-    sequential = str(m[0].linear)
-    layers = re.findall(r': ([^\(]+\([^\)]*\))', sequential)
-    layers = map(lambda x: x.split("(", 1), layers)
-    html = "<table>"
-    for layer, args in layers:
-        html += f'<tr><td>{layer}</td><td>({args}</td><tr/>'
-    return html+"</table>"
+    return hnc.get_module_html(int(module_to_display))
 
 def print_hn_info(hn_name, module_to_display):
     hn = load_hn(hn_name)
+    hypernetwork_cache[hn_name] = Hypernetwork_Cache(hn)
     return [f'<table>\
     <tr><td>Modules</td><td>{list(hn.layers.keys())}</td></tr>\
     <tr><td>Layer Structure</td><td>{", ".join([str(i) for i in hn.layer_structure])}</td></tr>\
@@ -41,7 +64,7 @@ def print_hn_info(hn_name, module_to_display):
     <tr><td>Step</td><td>{hn.step+1}</td></tr>\
     <tr><td>Weight Initialization</td><td>{hn.weight_init}</td></tr>\
     <tr><td>&nbsp;</td><td>&nbsp;</td></tr>\
-    </table>', layer_structure_to_html(hn_name, module_to_display)]
+    </table>', hypernetwork_cache[hn_name].get_module_html(int(module_to_display))]
 
 def merge_hn(hna_name, hnb_name, checked_modules, weight, output_name):
     if not hna_name or hna_name == '':
