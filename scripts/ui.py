@@ -49,6 +49,7 @@ def on_ui_tabs():
             <tr><td>&nbsp;</td><td>&nbsp;</td></tr>\
             <tr><td>Checkpoint Name</td><td>{hn.sd_checkpoint_name}</td></tr>\
             <tr><td>Step</td><td>{hn.step+1}</td></tr>\
+            <tr><td>Weight Initialization</td><td>{hn.weight_init}</td></tr>\
             </table>'
         hna.change(fn=print_hn_info, inputs=hna, outputs=hna_html)
         hnb.change(fn=print_hn_info, inputs=hnb, outputs=hnb_html)
