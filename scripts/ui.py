@@ -1,9 +1,6 @@
-import os
 import gradio as gr
-import torch
-from modules import scripts, script_callbacks, sd_models, shared
+from modules import script_callbacks
 from modules.ui import create_refresh_button
-from modules.hypernetworks import hypernetwork
 from scripts.utils import get_hypernetwork_names, load_hn, get_module_html_from_cache, print_hn_info, merge_hn
 
 def on_ui_tabs():
