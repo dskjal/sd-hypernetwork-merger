@@ -46,7 +46,9 @@ def on_ui_tabs():
             <tr><td>Use Dropout</td><td>{hn.use_dropout}</td></tr>\
             <tr><td>Last Layer Dropout</td><td>{hn.last_layer_dropout}</td></tr>\
             <tr><td>Activate Output</td><td>{hn.activate_output}</td></tr>\
+            <tr><td>&nbsp;</td><td>&nbsp;</td></tr>\
             <tr><td>Checkpoint Name</td><td>{hn.sd_checkpoint_name}</td></tr>\
+            <tr><td>Step</td><td>{hn.step+1}</td></tr>\
             </table>'
         hna.change(fn=print_hn_info, inputs=hna, outputs=hna_html)
         hnb.change(fn=print_hn_info, inputs=hnb, outputs=hnb_html)
