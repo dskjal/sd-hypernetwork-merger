@@ -13,18 +13,22 @@ def load_hn(hn_name):
     hn.load(path)
     return hn
 
-def layer_structure_to_html(hn):
-    sequential = str(hn.layers[list(hn.layers.keys())[0]][0].linear)
+def layer_structure_to_html(hn_name, module):
+    hn = load_hn(hn_name)
+    m = hn.layers.get(int(module))
+    if not m:
+        return ""
+    sequential = str(m[0].linear)
     layers = re.findall(r': ([^\(]+\([^\)]*\))', sequential)
     layers = map(lambda x: x.split("(", 1), layers)
-    html = ""
+    html = "<table>"
     for layer, args in layers:
         html += f'<tr><td>{layer}</td><td>({args}</td><tr/>'
-    return html
+    return html+"</table>"
 
-def print_hn_info(hn_name):
+def print_hn_info(hn_name, module_to_display):
     hn = load_hn(hn_name)
-    return f'<table>\
+    return [f'<table>\
     <tr><td>Modules</td><td>{list(hn.layers.keys())}</td></tr>\
     <tr><td>Layer Structure</td><td>{", ".join([str(i) for i in hn.layer_structure])}</td></tr>\
     <tr><td>Activation Func</td><td>{hn.activation_func}</td></tr>\
@@ -37,8 +41,7 @@ def print_hn_info(hn_name):
     <tr><td>Step</td><td>{hn.step+1}</td></tr>\
     <tr><td>Weight Initialization</td><td>{hn.weight_init}</td></tr>\
     <tr><td>&nbsp;</td><td>&nbsp;</td></tr>\
-    {layer_structure_to_html(hn)}\
-    </table>'
+    </table>', layer_structure_to_html(hn_name, module_to_display)]
 
 def merge_hn(hna_name, hnb_name, checked_modules, weight, output_name):
     if not hna_name or hna_name == '':
