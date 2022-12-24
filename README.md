@@ -14,4 +14,8 @@ The following settings do not have to match to be combined, but operation is not
 旧仕様では最終レイヤーに活性化関数が挿入されていた。これは意味がないので最新のバージョンでは使われていない。  
 In the old specification, an activation function was inserted in the final layer. This makes no sense and is not used in the latest version.  
 
+## Last Layer Dropout
+旧仕様では最後の全結合層の後にも dropout が挿入されていた。最新バージョンでは最後の全結合層の後には dropout は挿入しない。  
+In the old specification, a dropout was also inserted after the last linear layer. In the latest version, the dropout is not inserted after the last linear layer.
+
 ![](https://github.com/dskjal/sd-hypernetwork-merger/blob/main/misc/screenshot.png)
