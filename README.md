@@ -19,7 +19,7 @@ In the old specification, a dropout was also inserted after the last linear laye
 In the old specification, an activation function was inserted in the final layer. This makes no sense and is not used in the latest version.  
 
 ## [Module 1024](https://github.com/AUTOMATIC1111/stable-diffusion-webui/commit/1123f52cadf8d86c006177791b3191e5b8388b5a)
-Stable Diffusion 2.0 以降で新しい OpenCLIP を使う場合に有効にする。  
-Enable when using the new OpenCLIP with Stable Diffusion 2.0 or later.
+新しい OpenCLIP を使う場合に有効にする。  
+Enable when using the new OpenCLIP.
 
 ![](https://github.com/dskjal/sd-hypernetwork-merger/blob/main/misc/screenshot.png)
